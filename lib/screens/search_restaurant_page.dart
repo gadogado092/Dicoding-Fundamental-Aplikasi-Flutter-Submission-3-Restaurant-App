@@ -1,22 +1,31 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/models/restaurant.dart';
+import 'package:restaurant_app/blocs/restaurant_state.dart';
+import 'package:restaurant_app/blocs/restaurant_event.dart';
+import 'package:restaurant_app/blocs/search_restaurant_bloc.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/res/colors.dart';
 import 'package:restaurant_app/routes/route_paths.dart';
-import 'package:restaurant_app/widgets/base_text.dart';
+import 'package:restaurant_app/widgets/empty.dart';
+import 'package:restaurant_app/widgets/error.dart';
 import 'package:restaurant_app/widgets/item_restaurant.dart';
 import 'package:restaurant_app/widgets/loading.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SearchRestaurant extends StatefulWidget {
+class SearchRestaurantPage extends StatefulWidget {
   @override
-  _SearchRestaurantState createState() => _SearchRestaurantState();
+  _SearchRestaurantPageState createState() => _SearchRestaurantPageState();
 }
 
-class _SearchRestaurantState extends State<SearchRestaurant> {
+class _SearchRestaurantPageState extends State<SearchRestaurantPage> {
   final _searchController = TextEditingController();
-  List<Restaurant> _listSearchRestaurant = [];
-  List<Restaurant> _listRestaurant = [];
+  SearchRestaurantBloc _searchRestaurantBloc;
+
+  @override
+  void initState() {
+    _searchRestaurantBloc = BlocProvider.of(this.context);
+    _searchRestaurantBloc.add(SearchRestaurant(""));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +47,7 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                     InkWell(
                       onTap: () => Navigator.of(context).pop(),
                       child: Padding(
-                        padding:
-                            const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         child: Icon(
                           Icons.arrow_back,
                           size: 24,
@@ -70,15 +78,8 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                                   controller: _searchController,
                                   cursorColor: Colors.black,
                                   onChanged: (value) {
-                                    setState(() {
-                                      _listSearchRestaurant = _listRestaurant
-                                          .where((element) => element.name
-                                              .toLowerCase()
-                                              .contains(value
-                                                  .toString()
-                                                  .toLowerCase()))
-                                          .toList();
-                                    });
+                                    _searchRestaurantBloc
+                                        .add(SearchRestaurant(value));
                                   },
                                   decoration: new InputDecoration(
                                       border: InputBorder.none,
@@ -100,54 +101,34 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
               ),
             ),
             Expanded(
-              child: FutureBuilder<String>(
-                future: DefaultAssetBundle.of(context)
-                    .loadString('assets/local_restaurant.json'),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final data =
-                        Restaurants.fromJson(jsonDecode(snapshot.data));
-                    _listRestaurant = data.listRestaurant;
-                    if (_listSearchRestaurant.length != 0 &&
-                        _searchController.text.isNotEmpty) {
-                      return ListView.builder(
-                          itemCount: _listSearchRestaurant.length,
-                          itemBuilder: (context, position) {
-                            Restaurant restaurant =
-                                _listSearchRestaurant[position];
-                            return ItemRestaurant(
-                              restaurant: restaurant,
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, detailRestaurantPageRoute,
-                                    arguments: restaurant);
-                              },
-                            );
-                          });
-                    } else if (_listSearchRestaurant.length == 0 &&
-                        _searchController.text.isNotEmpty) {
-                      return Center(
-                          child: BaseText(text: "Restaurant Not Found"));
-                    } else {
-                      return ListView.builder(
-                          itemCount: _listRestaurant.length,
-                          itemBuilder: (context, position) {
-                            Restaurant restaurant = _listRestaurant[position];
-                            return ItemRestaurant(
-                              restaurant: restaurant,
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, detailRestaurantPageRoute,
-                                    arguments: restaurant);
-                              },
-                            );
-                          });
-                    }
-                  } else if (snapshot.hasError) {
-                    return Center(child: BaseText(text: "Error Load Data"));
+              child: BlocBuilder<SearchRestaurantBloc, RestaurantState>(
+                builder: (context, state) {
+                  if (state is RestaurantLoadSuccess) {
+                    return ListView.builder(
+                        itemCount: state.listRestaurant.length,
+                        itemBuilder: (context, position) {
+                          Restaurant restaurant =
+                              state.listRestaurant[position];
+                          return ItemRestaurant(
+                            restaurant: restaurant,
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, detailRestaurantPageRoute,
+                                  arguments: restaurant);
+                            },
+                          );
+                        });
+                  } else if (state is RestaurantLoadingProgress) {
+                    return LoadingWidget();
+                  } else if (state is RestaurantLoadFailure) {
+                    return Error(
+                      onTap: () => _searchRestaurantBloc.add(
+                          SearchRestaurant(_searchController.text.toString())),
+                    );
+                  } else if (state is RestaurantEmptyData) {
+                    return EmptyWidget(msg: "Data Not Found",);
                   }
-
-                  return Loading();
+                  return Container();
                 },
               ),
             )

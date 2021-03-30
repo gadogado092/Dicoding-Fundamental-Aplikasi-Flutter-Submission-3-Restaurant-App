@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/models/restaurant.dart';
+import 'package:restaurant_app/data/api/api_service.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/res/colors.dart';
 import 'package:restaurant_app/widgets/base_text.dart';
 
@@ -25,7 +26,8 @@ class ItemRestaurant extends StatelessWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.cover,
-                    image: NetworkImage(restaurant.pictureId)),
+                    image: NetworkImage(
+                        "${ApiService.baseUrlImage}small/${restaurant.pictureId}")),
                 borderRadius: BorderRadius.all(Radius.circular(4.0)),
                 color: RestaurantColors.GREY_COLOR_3,
               ),

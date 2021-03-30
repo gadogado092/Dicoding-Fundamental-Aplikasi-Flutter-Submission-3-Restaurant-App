@@ -35,6 +35,9 @@ dev_dependencies:
 
   build_runner: ^1.10.9
   json_serializable: ^3.5.1
+  http: ^0.12.2
+  flutter_bloc: ^6.1.1
+  equatable: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -48,8 +51,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - assets/local_restaurant.json
+  # assets:
+    # - assets/local_restaurant.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

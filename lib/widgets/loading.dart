@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/res/colors.dart';
 
-class Loading extends StatelessWidget {
-  const Loading({
+class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({
     Key key,
   }) : super(key: key);
 

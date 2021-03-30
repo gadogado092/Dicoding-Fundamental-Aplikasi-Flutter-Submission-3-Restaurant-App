@@ -1,12 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/models/restaurant.dart';
+import 'package:restaurant_app/blocs/restaurant_bloc.dart';
+import 'package:restaurant_app/blocs/restaurant_event.dart';
+import 'package:restaurant_app/blocs/restaurant_state.dart';
+import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/res/colors.dart';
 import 'package:restaurant_app/routes/route_paths.dart';
 import 'package:restaurant_app/widgets/base_text.dart';
+import 'package:restaurant_app/widgets/empty.dart';
+import 'package:restaurant_app/widgets/error.dart';
 import 'package:restaurant_app/widgets/item_restaurant.dart';
 import 'package:restaurant_app/widgets/loading.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,8 +18,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  RestaurantBloc _restaurantBloc;
+
   @override
   void initState() {
+    _restaurantBloc = BlocProvider.of(this.context);
+    _restaurantBloc.add(FetchRestaurant());
     super.initState();
   }
 
@@ -94,36 +102,34 @@ class _HomePageState extends State<HomePage> {
                   )
                 ],
               )),
-          Expanded(
-            child: FutureBuilder<String>(
-              future: DefaultAssetBundle.of(context)
-                  .loadString('assets/local_restaurant.json'),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final restaurants =
-                      Restaurants.fromJson(jsonDecode(snapshot.data));
-                  return ListView.builder(
-                      itemCount: restaurants.listRestaurant.length,
-                      itemBuilder: (context, position) {
-                        Restaurant restaurant =
-                            restaurants.listRestaurant[position];
-                        return ItemRestaurant(
-                          restaurant: restaurant,
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, detailRestaurantPageRoute,
-                                arguments: restaurant);
-                          },
-                        );
-                      });
-                } else if (snapshot.hasError) {
-                  return Center(child: BaseText(text: "Error Load Data"));
-                }
-
-                return Loading();
-              },
-            ),
-          )
+          Expanded(child: BlocBuilder<RestaurantBloc, RestaurantState>(
+            builder: (context, state) {
+              if (state is RestaurantLoadSuccess) {
+                return ListView.builder(
+                    itemCount: state.listRestaurant.length,
+                    itemBuilder: (context, position) {
+                      Restaurant restaurant = state.listRestaurant[position];
+                      return ItemRestaurant(
+                        restaurant: restaurant,
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, detailRestaurantPageRoute,
+                              arguments: restaurant);
+                        },
+                      );
+                    });
+              } else if (state is RestaurantLoadFailure) {
+                return Error(
+                  onTap: () => _restaurantBloc.add(FetchRestaurant()),
+                );
+              } else if (state is RestaurantEmptyData) {
+                return EmptyWidget(
+                  msg: "Data Restaurant Belum Ada",
+                );
+              }
+              return LoadingWidget();
+            },
+          ))
         ],
       )),
     );
