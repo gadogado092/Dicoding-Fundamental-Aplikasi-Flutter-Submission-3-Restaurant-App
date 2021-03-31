@@ -28,6 +28,12 @@ class _SearchRestaurantPageState extends State<SearchRestaurantPage> {
   }
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
