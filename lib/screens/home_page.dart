@@ -5,6 +5,8 @@ import 'package:restaurant_app/bloc/restaurant_state.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/res/colors.dart';
 import 'package:restaurant_app/routes/route_paths.dart';
+import 'package:restaurant_app/utils/background_service.dart';
+import 'package:restaurant_app/utils/notification_helper.dart';
 import 'package:restaurant_app/widgets/base_text.dart';
 import 'package:restaurant_app/widgets/empty.dart';
 import 'package:restaurant_app/widgets/error.dart';
@@ -19,12 +21,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   RestaurantBloc _restaurantBloc;
+  final NotificationHelper _notificationHelper = NotificationHelper();
+  final BackgroundService _service = BackgroundService();
 
   @override
   void initState() {
     _restaurantBloc = BlocProvider.of(this.context);
     _restaurantBloc.add(FetchRestaurant());
+    port.listen((_) async => await _service.someTask());
+    _notificationHelper
+        .configureSelectNotificationSubject(detailRestaurantPageRoute);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    selectNotificationSubject.close();
   }
 
   @override

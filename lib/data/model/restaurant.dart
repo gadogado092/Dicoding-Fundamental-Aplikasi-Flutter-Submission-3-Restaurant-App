@@ -15,6 +15,8 @@ class RestaurantResult {
   RestaurantResult(this.listRestaurant, this.status, this.message);
   factory RestaurantResult.fromJson(Map<String, dynamic> json) =>
       _$RestaurantResultFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RestaurantResultToJson(this);
 }
 
 @JsonSerializable()
@@ -51,6 +53,7 @@ class Restaurant {
 
   factory Restaurant.fromJson(Map<String, dynamic> json) =>
       _$RestaurantFromJson(json);
+
 
   Map<String, dynamic> toJsonSql() {
     return {

@@ -16,8 +16,7 @@ import 'package:restaurant_app/widgets/loading.dart';
 class DetailRestaurant extends StatefulWidget {
   final Restaurant restaurant;
 
-  const DetailRestaurant({Key key, @required this.restaurant})
-      : super(key: key);
+  const DetailRestaurant({this.restaurant}) : super();
 
   @override
   _DetailRestaurantState createState() => _DetailRestaurantState();
