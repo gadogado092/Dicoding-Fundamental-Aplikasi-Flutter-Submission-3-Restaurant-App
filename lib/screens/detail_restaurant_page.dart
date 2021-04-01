@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:restaurant_app/blocs/detail_restaurant_bloc.dart';
 import 'package:restaurant_app/blocs/detail_restaurant_event.dart';
 import 'package:restaurant_app/blocs/detail_restaurant_state.dart';
+import 'package:restaurant_app/blocs/favorite_restaurant_bloc.dart';
+import 'package:restaurant_app/blocs/favorite_restaurant_event.dart';
+import 'package:restaurant_app/blocs/favorite_restaurant_state.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/res/colors.dart';
@@ -22,11 +25,15 @@ class DetailRestaurant extends StatefulWidget {
 
 class _DetailRestaurantState extends State<DetailRestaurant> {
   DetailRestaurantBloc _detailRestaurantBloc;
+  FavoriteRestaurantBloc _favoriteRestaurantBloc;
 
   @override
   void initState() {
     _detailRestaurantBloc = BlocProvider.of(this.context);
     _detailRestaurantBloc.add(FetchDetailRestaurant(widget.restaurant.id));
+
+    _favoriteRestaurantBloc = BlocProvider.of(this.context);
+    _favoriteRestaurantBloc.add(FetchFavoriteStatus(widget.restaurant));
     super.initState();
   }
 
@@ -91,6 +98,12 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
             width: MediaQuery.of(context).size.width,
             height: 220.0,
             margin: EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _buildIconFavorite(restaurant),
+              ],
+            ),
             decoration: BoxDecoration(
               image: DecorationImage(
                   fit: BoxFit.cover,
@@ -281,6 +294,46 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                 }),
           )
         ],
+      ),
+    );
+  }
+
+  Widget _buildIconFavorite(Restaurant restaurant) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(8),
+          bottomLeft: Radius.circular(8),
+        ),
+        color: RestaurantColors.GREY_COLOR_1,
+      ),
+      child: BlocBuilder<FavoriteRestaurantBloc, FavoriteRestaurantState>(
+        builder: (context, state) {
+          if (state is LoadData) {
+            if (state.isFavorite) {
+              return IconButton(
+                icon: Icon(
+                  Icons.favorite,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  _favoriteRestaurantBloc.add(DeleteFavorite(restaurant));
+                },
+              );
+            } else {
+              return IconButton(
+                icon: Icon(
+                  Icons.favorite_border,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  _favoriteRestaurantBloc.add(AddFavorite(restaurant));
+                },
+              );
+            }
+          }
+          return Container();
+        },
       ),
     );
   }

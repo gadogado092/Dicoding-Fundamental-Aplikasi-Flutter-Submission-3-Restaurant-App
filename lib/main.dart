@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/blocs/detail_restaurant_bloc.dart';
+import 'package:restaurant_app/blocs/favorite_restaurant_bloc.dart';
 import 'package:restaurant_app/blocs/restaurant_bloc.dart';
 import 'package:restaurant_app/blocs/search_restaurant_bloc.dart';
 import 'package:restaurant_app/res/colors.dart';
 import 'package:restaurant_app/routes/route_paths.dart';
 import 'package:restaurant_app/screens/detail_restaurant_page.dart';
+import 'package:restaurant_app/screens/favorite_restaurant_page.dart';
 import 'package:restaurant_app/screens/home_page.dart';
 import 'package:restaurant_app/screens/search_restaurant_page.dart';
+import 'package:restaurant_app/screens/setting_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
@@ -19,6 +22,9 @@ void main() {
     ),
     BlocProvider<SearchRestaurantBloc>(
       create: (context) => SearchRestaurantBloc(),
+    ),
+    BlocProvider<FavoriteRestaurantBloc>(
+      create: (context) => FavoriteRestaurantBloc(),
     ),
   ], child: MyApp()));
 }
@@ -37,6 +43,8 @@ class MyApp extends StatelessWidget {
       routes: {
         homePageRoute: (context) => HomePage(),
         searchRestaurantPageRoute: (context) => SearchRestaurantPage(),
+        favoriteRestaurantPageRoute: (context) => FavoriteRestaurantPage(),
+        settingPageRoute: (context) => SettingPage(),
         detailRestaurantPageRoute: (context) => DetailRestaurant(
             restaurant: ModalRoute.of(context).settings.arguments)
       },

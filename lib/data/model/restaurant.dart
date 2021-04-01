@@ -51,6 +51,16 @@ class Restaurant {
 
   factory Restaurant.fromJson(Map<String, dynamic> json) =>
       _$RestaurantFromJson(json);
+
+  Map<String, dynamic> toJsonSql() {
+    return {
+      'id': id,
+      'name': name,
+      'pictureId': pictureId,
+      'city': city,
+      'rating': rating,
+    };
+  }
 }
 
 @JsonSerializable()
