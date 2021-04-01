@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/blocs/restaurant_state.dart';
-import 'package:restaurant_app/blocs/restaurant_event.dart';
-import 'package:restaurant_app/blocs/search_restaurant_bloc.dart';
+import 'package:restaurant_app/bloc/restaurant_state.dart';
+import 'package:restaurant_app/bloc/restaurant_event.dart';
+import 'package:restaurant_app/bloc/search_restaurant_bloc.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/res/colors.dart';
 import 'package:restaurant_app/routes/route_paths.dart';

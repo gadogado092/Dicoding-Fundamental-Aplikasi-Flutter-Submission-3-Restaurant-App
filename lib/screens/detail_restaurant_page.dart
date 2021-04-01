@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/blocs/detail_restaurant_bloc.dart';
-import 'package:restaurant_app/blocs/detail_restaurant_event.dart';
-import 'package:restaurant_app/blocs/detail_restaurant_state.dart';
-import 'package:restaurant_app/blocs/favorite_restaurant_bloc.dart';
-import 'package:restaurant_app/blocs/favorite_restaurant_event.dart';
-import 'package:restaurant_app/blocs/favorite_restaurant_state.dart';
+import 'package:restaurant_app/bloc/detail_restaurant_bloc.dart';
+import 'package:restaurant_app/bloc/detail_restaurant_event.dart';
+import 'package:restaurant_app/bloc/detail_restaurant_state.dart';
+import 'package:restaurant_app/bloc/favorite_restaurant_bloc.dart';
+import 'package:restaurant_app/bloc/favorite_restaurant_event.dart';
+import 'package:restaurant_app/bloc/favorite_restaurant_state.dart';
 import 'package:restaurant_app/data/api/api_service.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/res/colors.dart';

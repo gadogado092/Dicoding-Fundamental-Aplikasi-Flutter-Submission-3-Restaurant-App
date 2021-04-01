@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_app/blocs/detail_restaurant_bloc.dart';
-import 'package:restaurant_app/blocs/favorite_restaurant_bloc.dart';
-import 'package:restaurant_app/blocs/restaurant_bloc.dart';
-import 'package:restaurant_app/blocs/search_restaurant_bloc.dart';
+import 'package:restaurant_app/bloc/detail_restaurant_bloc.dart';
+import 'package:restaurant_app/bloc/favorite_restaurant_bloc.dart';
+import 'package:restaurant_app/bloc/restaurant_bloc.dart';
+import 'package:restaurant_app/bloc/search_restaurant_bloc.dart';
 import 'package:restaurant_app/res/colors.dart';
 import 'package:restaurant_app/routes/route_paths.dart';
 import 'package:restaurant_app/screens/detail_restaurant_page.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:restaurant_app/blocs/favorite_restaurant_event.dart';
-import 'package:restaurant_app/blocs/favorite_restaurant_state.dart';
+import 'package:restaurant_app/bloc/favorite_restaurant_event.dart';
+import 'package:restaurant_app/bloc/favorite_restaurant_state.dart';
 import 'package:restaurant_app/data/model/restaurant.dart';
 import 'package:restaurant_app/data/sqlite/database_helper.dart';
 
